@@ -1,5 +1,5 @@
 var angularUpload = angular.module("angularUpload", ["ngFileUpload"]);
-angularUpload .service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", function (upload, $configs, $filter, interval, $q) {
+angularUpload.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", function (upload, $configs, $filter, interval, $q) {
 
     this.single = function (file, item) {
         var deferred = $q.defer();
@@ -27,7 +27,7 @@ angularUpload .service("$ngUpload", ["Upload", "$configs", "$filter", "$interval
     }
 
     this.multiple = function (files, item) {
-        item.files = [];
+        var _files = [];
         var deferred = $q.defer();
         var progress = 100 / files.length;
 
@@ -40,7 +40,7 @@ angularUpload .service("$ngUpload", ["Upload", "$configs", "$filter", "$interval
                     error: "size > " + $configs.uploadFileSize + " Byte",
                     ready: false
                 }
-                item.files.push(object);
+                _files.push(object);
             } else {
                 upload.upload({
                     url: $configs.upload,
@@ -52,20 +52,19 @@ angularUpload .service("$ngUpload", ["Upload", "$configs", "$filter", "$interval
                         ready: true,
                         error: null
                     }
-                    item.files.push(object);
+                    _files.push(object);
                     item.uploadProgress += progress;
-                    deferred.resolve(data);
                 }).error(function (error) {
                     var object = {
                         file: file.name,
                         error: error,
                         ready: false
                     }
-                    item.files.push(object);
+                    _files.push(object);
                 });
             }
         });
-
+        deferred.resolve(_files);
         return deferred.promise;
     }
 
