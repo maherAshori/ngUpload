@@ -1,4 +1,6 @@
-app.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", function (upload, $configs, $filter, interval, $q) {
+var angularUpload = angular.module("angularUpload", ["ngFileUpload"]);
+angularUpload .service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", function (upload, $configs, $filter, interval, $q) {
+
     this.single = function (file, item) {
         var deferred = $q.defer();
 
@@ -26,14 +28,14 @@ app.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", fu
 
     this.multiple = function (files, item) {
         item.files = [];
-        const deferred = $q.defer();
-        const progress = 100 / files.length;
+        var deferred = $q.defer();
+        var progress = 100 / files.length;
 
         item.uploadProgress = 0;
 
         angular.forEach(files, function (file) {
             if (file.size > $configs.uploadFileSize) {
-                const object = {
+                var object = {
                     file: file.name,
                     error: "size > " + $configs.uploadFileSize + " Byte",
                     ready: false
@@ -44,7 +46,7 @@ app.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", fu
                     url: $configs.upload,
                     file: file
                 }).success(function (data) {
-                    const object = {
+                    var object = {
                         imagePreview: $configs.uploadTemp + data.FileName + data.Extension,
                         image: $configs.uploadMedia + data.FileName,
                         ready: true,
@@ -54,7 +56,7 @@ app.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", fu
                     item.uploadProgress += progress;
                     deferred.resolve(data);
                 }).error(function (error) {
-                    const object = {
+                    var object = {
                         file: file.name,
                         error: error,
                         ready: false
@@ -66,4 +68,5 @@ app.service("$ngUpload", ["Upload", "$configs", "$filter", "$interval", "$q", fu
 
         return deferred.promise;
     }
+
 }]);
