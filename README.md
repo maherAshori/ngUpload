@@ -21,15 +21,11 @@ Help You to have easy upload component in "angular js" which can use in controll
     var yourApp = angular.module("yourApp", ["angularUpload"]);
   </li>
   <li>
-    Define public constant in your project
+    Define upload api in your project
   
     app.constant("$configs", {
-      upload: "http://localhost:2005/api/fileUpload", 
-      //for example `upload` is my main uploader method which i call it every time i want upload files or etc ...
-      uploadTemp: "http://localhost:2005/api/tempfile/",
-      //this is my temp files storage
-      uploadMedia: "http://localhost:2005/api/media/"
-      //this is my main files storage
+      upload: "http://localhost:2005/api/fileUpload"
+      //we use this method for upload images
     });
   </li>
   <li>
@@ -47,8 +43,10 @@ Help You to have easy upload component in "angular js" which can use in controll
           ngUpload[api](_files, item).then(function (data) {
               if (single) {
                   //use return data to show as single image
+                  item.image = data.FileName;
               } else {
                   //use return data to show as multiple images
+                  self.item.files = data;
               }
           });
       }
@@ -59,6 +57,11 @@ Help You to have easy upload component in "angular js" which can use in controll
   <li>
     add directive in your view
 
+     <!-- progress-bar: work for both mode with same way --> 
+     <div ng-if="self.item.uploadProgress > 0" class="progress" style="height: 1px;">
+        <div class="progress-bar" role="progressbar" style="width: {{self.item.uploadProgress}}%;" aria-valuemax="100"></div>
+     </div>
+     
      <!-- single mode --> 
      <button ngf-select
           ngf-change="self.uploadFile($files, self.item, true)"
@@ -68,6 +71,8 @@ Help You to have easy upload component in "angular js" which can use in controll
           ngf-keep-distinct="true">
       upload single image
      </button>
+     
+     <img ng-src="{{self.item.image}}" />
      
      <!-- multiple mode --> 
      <button ngf-select
@@ -79,5 +84,13 @@ Help You to have easy upload component in "angular js" which can use in controll
           ngf-keep-distinct="true">
       upload multiple images
      </button>
+
+     <div class="row">
+       <div class="col-4" ng-repeat="file in self.item.files">
+          <img ng-src="{{file.image}}" />
+          <hr>
+          {{file}}
+       </div>
+     </div>
   </li>
 </ol>
