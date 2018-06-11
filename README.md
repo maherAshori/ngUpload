@@ -23,7 +23,7 @@ Help You to have easy upload component in "angular js" which can use in controll
   <li>
     Define upload api in your project
   
-    app.constant("$configs", {
+    yourApp.constant("$configs", {
       upload: "http://localhost:2005/api/fileUpload"
       //we use this method for upload images
     });
@@ -52,7 +52,7 @@ Help You to have easy upload component in "angular js" which can use in controll
       }
     };
     controller.$inject = ["$scope", "$ngUpload", "$configs"];
-    app.controller("myController", controller);
+    yourApp.controller("myController", controller);
   </li>
   <li>
     add directive in your view
